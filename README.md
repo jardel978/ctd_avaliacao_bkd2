@@ -19,7 +19,7 @@
 
 <h3 id="pre-requisitos">Pré-requisitos ⚙</h3>
 
-<p>Para executar o código que foi desenvolvido se atente em ter instalado em sua sua máquina: Java JDK 17 (versão LTS atual), editor código e Docker.</p>
+<p>Para executar o código que foi desenvolvido se atente em ter instalado em sua sua máquina: Java JDK 17 (versão LTS atual), editor código e Docker (opcional).</p>
 <br>
   
 <h2 id="autor">Autores 👨‍💻👨‍💻👨‍💻</h2>
