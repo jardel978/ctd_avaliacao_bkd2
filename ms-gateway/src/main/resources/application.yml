@@ -1,0 +1,66 @@
+# Configuraciones del servidor
+server:
+  port: 8090
+# Configuraciones de eureka
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+# Configuraciones de spring cloud
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: ms-gateway
+  cloud:
+    gateway:
+      default-filters:
+        - TokenRelay
+      routes:
+        - id: ms-bill
+          uri: lb://ms-bill
+          predicates:
+            - Path=/api/v1/**
+          filters:
+            - StripPrefix=2
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak-provider:
+            issuer-uri: http://localhost:8080/realms/umReino
+        registration:
+          keycloak-spring-gateway-client:
+            provider: keycloak-provider
+            scope: openid
+            client-id: spring-gateway-client
+            client-secret: QLxG2UJNhZtc6eGRuak80Ic7xY6bjjYa
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+info:
+  name: Servico de roteamento (API Gateway) para os demais servicos presentes no ecossistema da aplicacao.
+  author: Nelson Kobayashi, Marcos Spano, Jardel Oliveira
+  severity: Alto
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+  pattern:
+    dateformat: 'dd-MM-yyyy HH:mm:ss.SSS'
+    console: '%clr(%d{"dd-MM-yyyy''T''HH:mm:ss"}){faint} %highlight(%clr(${LOG_LEVEL_PATTERN:-%5p})) %clr(${PID:- })
+    %clr(---){faint} %clr([%15.15t]){faint} %clr([%-40.40logger{39}]:%line){cyan} %clr(-){faint} %m%n%wEx'

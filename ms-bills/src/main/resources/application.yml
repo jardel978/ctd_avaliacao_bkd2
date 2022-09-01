@@ -1,0 +1,69 @@
+server:
+  port: ${PORT:9191}
+
+spring:
+  application:
+    name: ms-bill
+  main:
+    allow-circular-references: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/umReino/protocol/openid-connect/certs
+#          jwk-set-uri: http://localhost:8080/realms/umReino/protocol/openid-connect/certs  # url para validar token
+
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    driverClassName: org.h2.Driver
+    username: sa
+    password: sa
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+eureka:
+  instance:
+    hostname: localhost
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+jwt:
+  auth:
+    converter:
+      resource-id: "bill-app"
+      principal-attribute: "preferred_username"
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+  pattern:
+    dateformat: 'dd-MM-yyyy HH:mm:ss.SSS'
+    console: '%clr(%d{"dd-MM-yyyy''T''HH:mm:ss"}){faint} %highlight(%clr(${LOG_LEVEL_PATTERN:-%5p})) %clr(${PID:- })
+    %clr(---){faint} %clr([%15.15t]){faint} %clr([%-40.40logger{39}]:%line){cyan} %clr(-){faint} %m%n%wEx'
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+info:
+  name: Servico de faturas dos clientes.
+  author: Nelson Kobayashi, Marcos Spano, Jardel Oliveira
+  severity: Alto
